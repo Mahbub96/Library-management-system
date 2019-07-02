@@ -6,12 +6,12 @@
 #include<windows.h>
 
 struct books{
-    int serial;
+    int serial,number;
     char name[50];
     char writer[50];
     char department[30];
     char pas[30];
-    char self;
+    char self[3];
 
 }b;
 void gotoxy(int x,int y);
@@ -152,78 +152,78 @@ void menu(){
 }
 
 void add(){
+    system("cls");
+    welcome();
     FILE *fp,*fpr;
-    int serial=0;
     fp=fopen("data.dat","ab+");
+
     if(!fp){
         fp=fopen("data.dat","wb+");
         if(!fp){
-            printf("\n\n\n\tSystem error!\a\a\a");
-        }
-
-    }
-    fpr=fopen("data.dat","rb");
-    system("cls");
-    welcome();
-    char another='y';
-    while(1){
-        printf("\n\n\tEnter Book Name:");
-        fflush(stdin);
-        gets(b.name);
-        printf("\n%s\tEnter writer's Name:",b.name);
-        gets(b.writer);
-        printf("\n\tEnter Department Name:");
-        gets(b.department);
-        printf("\n\tEnter Self Number:");
-        fflush(stdin);
-        scanf("%s",b.self);
-
-        while(fread(&b,sizeof(b),1,fpr)){}
-            while(serial<=b.serial){
-                if(serial==b.serial){
-                    b.serial++;
-                    break;
-                }
-                serial++;
-            }
-
-        printf("\n%s\t Do you want to add another book?(y/n)",b.self);
-        fflush(stdin);
-        another=getch();
-        fwrite(&b,sizeof(b),1,fp);
-        if(another!='y' && another!='Y'){
-            fclose(fp);
-            fclose(fpr);
+            printf("\n\n\n System error ! ! \a\a\a");
             menu();
         }
-        else{
-            fclose(fp);
-            fclose(fpr);
-            add();
-        }
     }
+    fpr=fopen("data.dat","rb");
+    char another='y';
+    char tempName[30],tempWriter[30];
+    while(another=='y'){
 
 
+        fflush(stdin);
+        printf("\n\n\tEnter book name:");
+        gets(b.name);
+        printf("\n\tEnter Writers name:");
+        gets(b.writer);
+        printf("\n\tEnter department name:");
+        gets(b.department);
+        printf("\n\tEnter Book-self Number:");
+        gets(b.self);
 
+
+        strcpy(tempName,b.name);
+        strcpy(tempWriter,b.writer);
+
+        /* book  Number auto generate */
+
+        //have to debug.......
+        while(fread(&b,sizeof(b),1,fpr)){
+            if(!(strcmp(b.name,tempName) && strcmp(b.writer,tempWriter))){
+                b.number++;
+            }
+        }
+        fwrite(&b,sizeof(b),1,fp);
+
+        printf("\n\\tDo you want to add another book?: [ y / n ]");
+        another=getch();
+
+    }
+    fclose(fp);
+    menu();
 }
 
 void list(){
     FILE *fpr;
-    int i=6;
+    int i=6,serial=1;
     fpr=fopen("data.dat","rb");
     system("cls");
     welcome();
-    printf("\n\n\nSerial\tName\t\tWriter\t\t Self number\n");
+    printf("\n\n\nSerial\tName\t\t\tWriter\t\t\tDepartment\tSelf number\tTotal Number of books");
     while(fread(&b,sizeof(b),1,fpr)){
             gotoxy(2,i);
-            printf("%d",b.serial);
+            printf("%d",serial);
             gotoxy(8,i);
             printf("%s",b.name);
-            gotoxy(24,i);
+            gotoxy(32,i);
             printf("%s",b.writer);
-            gotoxy(42,i);
-            printf("%d",b.self);
+            gotoxy(56,i);
+            printf("%s",b.department);
+            gotoxy(77,i);
+            printf("%s",b.self);
+            gotoxy(92,i);
+            printf("%d",b.number);
             i+=2;
+            serial++;
     }
     fclose(fpr);
     printf("\n\n\n\t\tPress any key to.......");
