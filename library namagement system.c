@@ -25,6 +25,7 @@ struct books{
 
     char number[3];
     char name[50];
+    char Name[50];
     char writer[50];
     char department[30];
     //char pas[30];
@@ -194,6 +195,8 @@ void add(){
         fflush(stdin);
         printf("\n\n\tEnter book name:");
         gets(b.name);
+        strupr(b.name);
+
         printf("\n\tEnter Writers name:");
         gets(b.writer);
         printf("\n\tEnter department name:");
@@ -237,10 +240,13 @@ void list(){
             serial++;
     }
     fclose(fpr);
-    printf("\n\n\n\t\tPress any key to.......");
-    getch();
-    menu();
-
+    char choice;
+    printf("\n\n\n\t.....Press ESC to exit............");
+    do{
+        choice=getch();
+        if(choice == 27)
+            menu();
+    }while(1);
 
 }
 
@@ -254,6 +260,7 @@ void search(){
     fflush(stdin);
     printf("\n\t Enter Book Name:");
     gets(name);
+    strupr(name);
     printf("\n\n\nSerial\tName\t\t\tWriter\t\t\tDepartment\tSelf number\tTotal Number of books");
     while(fread(&b,sizeof(b),1,fpr)){
 
@@ -284,13 +291,57 @@ void search(){
         printf("\n\n\tBook not found.... \a\a");
 
     fclose(fpr);
+    char choice;
     printf("\n\n\n\t.....Press ESC to exit............");
-    getch();
-    menu();
+    do{
+        choice=getch();
+        if(choice == 27)
+            menu();
+    }while(1);
 }
 
 void modify(){
+    system("cls");
+    welcome();
+    FILE *fp;
+    long int size=sizeof(b);
+    fp=fopen("data.dat","rb+");
 
+    char name[40];
+    printf("\n\tEnter Name to modify:");
+    fflush(stdin);
+    gets(name);
+    while(fread(&b,sizeof(b),1,fp)){
+
+        if(!strcmp(b.name,name)){
+
+            fflush(stdin);
+            printf("\n\n\tEnter New book name:");
+            gets(b.name);
+            printf("\n\tEnter New Writers name:");
+            gets(b.writer);
+            printf("\n\tEnter New department name:");
+            gets(b.department);
+            printf("\n\tEnter New Book-self Number:");
+            gets(b.self);
+            printf("\n\tHow many Books(updated):");
+            gets(b.number);
+            //fseek(b,-size,SEEK_CUR);
+            fwrite(&b,sizeof(b),1,fp);
+            break;
+            }
+    }
+
+
+
+    fclose(fp);
+    char choice;
+    printf("\n\n\n\t.....Press ESC to exit............");
+    do{
+        choice=getch();
+        if(choice == 27)
+            menu();
+    }while(1);
 }
 
 void removes(){
