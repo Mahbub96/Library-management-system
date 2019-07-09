@@ -245,40 +245,7 @@ void list(){
 }
 
 void search(){
-    FILE *fpr;
-    char name[40];
-    int i=8,serial=1;
-    fpr=fopen("data.dat","rb");
-    system("cls");
-    welcome();
-    fflush(stdin);
-    printf("\n\tEnter book Name:");
-    gets(name);
-    printf("\n\n\nSerial\tName\t\t\tWriter\t\t\tDepartment\tSelf number\tTotal Number of books");
-    while(fread(&b,sizeof(b),1,fpr)){
-          if(!strcmp(b.name,name))
-            gotoxy(2,i);
-            printf("%d",serial);
-            gotoxy(8,i);
-            printf("%s",b.name);
-            gotoxy(32,i);
-            printf("%s",b.writer);
-            gotoxy(56,i);
-            printf("%s",b.department);
-            gotoxy(77,i);
-            printf("%s",b.self);
-            gotoxy(92,i);
-            printf("%s",b.number);
-            i+=2;
-            serial++;
 
-          }
-
-
-    fclose(fpr);
-    printf("\n\n\n\t\tPress any key to.......");
-    getch();
-    menu();
 }
 
 void modify(){
