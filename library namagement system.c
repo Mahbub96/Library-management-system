@@ -245,7 +245,48 @@ void list(){
 }
 
 void search(){
+    FILE *fpr;
+    fpr=fopen("data.dat","rb");
+    char name[40];
+    int found=0,serial=1,i=8;
+    system("cls");
+    welcome();
+    fflush(stdin);
+    printf("\n\t Enter Book Name:");
+    gets(name);
+    printf("\n\n\nSerial\tName\t\t\tWriter\t\t\tDepartment\tSelf number\tTotal Number of books");
+    while(fread(&b,sizeof(b),1,fpr)){
 
+        if(!strcmp(b.name,name)){
+
+            gotoxy(2,i);
+            printf("%d",serial);
+            gotoxy(8,i);
+            printf("%s",b.name);
+            gotoxy(32,i);
+            printf("%s",b.writer);
+            gotoxy(56,i);
+            printf("%s",b.department);
+            gotoxy(77,i);
+            printf("%s",b.self);
+            gotoxy(92,i);
+            printf("%s",b.number);
+            i+=2;
+            serial++;
+
+
+
+            found=1;
+        }
+
+    }
+    if(!found)
+        printf("\n\n\tBook not found.... \a\a");
+
+    fclose(fpr);
+    printf("\n\n\n\t.....Press ESC to exit............");
+    getch();
+    menu();
 }
 
 void modify(){
