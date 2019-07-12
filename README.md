@@ -1,2 +1,2 @@
-# bank-management-system
+# Library-management-system
 This is a console application using c
