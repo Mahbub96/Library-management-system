@@ -375,7 +375,7 @@ void removes(){
 
         temp=fopen("temp","wb+");
         if(!temp){
-            printf("\n\n\system error press any key");
+            printf("\n\n\n system error press any key");
             getch();
             menu();
         }
