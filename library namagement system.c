@@ -62,14 +62,14 @@ void gotoxy(int x,int y)
 void welcome(){
 
     int i=0;
-    printf("\t");
+    printf("\t\t\t\t");
     while(i<50){
         i++;
         printf("%c",219);
     }
     i=0;
-    printf("\n\t%c\tWelcome to library Management System\t %c\n",219,219);
-    printf("\t");
+    printf("\n\t\t\t\t%c\tWelcome to library Management System\t %c\n",219,219);
+    printf("\t\t\t\t");
 
     while(i<50){
         i++;
@@ -123,19 +123,19 @@ void menu(){
     system("cls");
     welcome();
     int choice;
-    gotoxy(5,4);
+    gotoxy(30,4);
     printf("1.Add books");
-    gotoxy(25,4);
+    gotoxy(50,4);
     printf("2.View book list");
-    gotoxy(45,4);
+    gotoxy(70,4);
     printf("3.Search book");
-    gotoxy(5,6);
+    gotoxy(30,6);
     printf("4.Modify list");
-    gotoxy(25,6);
+    gotoxy(50,6);
     printf("5.Delete Books");
-    gotoxy(45,6);
+    gotoxy(70,6);
     printf("6.Exit");
-    gotoxy(5,9);
+    gotoxy(30,9);
     printf("Enter your Choice :> ");
     fflush(stdin);
     scanf("%d",&choice);
@@ -223,7 +223,9 @@ void list(){
     fpr=fopen("data.dat","rb");
     system("cls");
     welcome();
-    printf("\n\n\nSerial\tName\t\t\tWriter\t\t\tDepartment\tSelf number\tTotal Number of books");
+    upperWrap();
+    printf("Serial\tName\t\t\tWriter\t\t\tDepartment\tSelf number\tTotal Number of books");
+
     while(fread(&b,sizeof(b),1,fpr)){
             gotoxy(2,i);
             printf("%d",serial);
@@ -241,6 +243,8 @@ void list(){
             serial++;
     }
     fclose(fpr);
+    downWrap();
+
     char choice;
     printf("\n\n\n\t.....Press ESC to exit............");
     do{
@@ -255,14 +259,15 @@ void search(){
     FILE *fpr;
     fpr=fopen("data.dat","rb");
     char name[40];
-    int found=0,serial=1,i=8;
+    int found=0,serial=1,i=8,n=0;
     system("cls");
     welcome();
     fflush(stdin);
     printf("\n\t Enter Book Name:");
     gets(name);
     strupr(name);
-    printf("\n\n\nSerial\tName\t\t\tWriter\t\t\tDepartment\tSelf number\tTotal Number of books");
+    upperWrap();
+    printf("Serial\tName\t\t\tWriter\t\t\tDepartment\tSelf number\tTotal Number of books");
     while(fread(&b,sizeof(b),1,fpr)){
 
         if(!strcmp(b.name,name)){
@@ -288,9 +293,10 @@ void search(){
         }
 
     }
+
     if(!found)
         printf("\n\n\tBook not found.... \a\a");
-
+    downWrap();
     fclose(fpr);
     char choice;
     printf("\n\n\n\t.....Press ESC to exit............");
@@ -304,22 +310,43 @@ void search(){
 
 
 void modify(){
+    FILE *fp;
+    struct books s;
+    fp=fopen("data.dat","rb+");
+    char name[40];
+    int found=0,serial=1,i=8,n=0;
     system("cls");
     welcome();
-    FILE *fp;
-    fp=fopen("data.dat","rb+");
-    struct books s;
-
-    char name[40];
-    char choice;
-
-    printf("\n\tEnter Name to modify:");
     fflush(stdin);
+    printf("\n\t Enter Book Name:");
     gets(name);
     strupr(name);
+    upperWrap();
+    printf("Serial\tName\t\t\tWriter\t\t\tDepartment\tSelf number\tTotal Number of books");
     while(fread(&b,sizeof(b),1,fp)){
 
         if(!strcmp(b.name,name)){
+
+
+
+            gotoxy(2,i);
+            printf("%d",serial);
+            gotoxy(8,i);
+            printf("%s",b.name);
+            gotoxy(32,i);
+            printf("%s",b.writer);
+            gotoxy(56,i);
+            printf("%s",b.department);
+            gotoxy(77,i);
+            printf("%s",b.self);
+            gotoxy(92,i);
+            printf("%s",b.number);
+            i+=2;
+            serial++;
+
+
+
+
 
             fflush(stdin);
             printf("\n\n\tEnter New book name:");
@@ -334,29 +361,27 @@ void modify(){
             printf("\n\tHow many Books(updated):");
             gets(s.number);
             fseek(fp,-sizeof(b),SEEK_CUR);
-            fwrite(&s,sizeof(b),1,fp);
+            fwrite(&s,sizeof(s),1,fp);
+            found++;
             break;
-            }
-            else{
-                printf("\n\n\tNo book found ...\n\n\t1.Retry \t\t||\t  Or press \' ESC \' to exit...");
-                do{
-                    choice=getch();
-                    if(choice==27)
-                        menu();
-                    else if(choice=='1')
-                        modify();
-                }while(1);
+
             }
     }
+     downWrap();
+     fclose(fp);
+    if(!found)
+        printf("\n\nFile not found\a");
+    else
+        printf("\n\nSuccessfully Modified ......");
 
 
 
-    fclose(fp);
 
     printf("\n\n\n\t.....Press ESC to exit............");
+    char choice;
     do{
         choice=getch();
-        if(choice == 27)
+        if(choice ==27)
             menu();
     }while(1);
 }
@@ -393,16 +418,18 @@ void removes(){
 
         }
 
-        fclose(fpr);
-        fclose(temp);
+
 
         if(!flag)
 	{
+	    fclose(temp);
 		printf("\n\n\t NO BOOK TO DELETE.");
 		remove("temp");
 	}
 		else
 		{
+		    fclose(fpr);
+            fclose(temp);
 			remove("data.dat");
 			rename("temp","data.dat");
 			printf("RECORD DELETED SUCCESSFULLY.");
@@ -410,6 +437,8 @@ void removes(){
 		}
 
     }
+
+
     char choice;
     printf("\n\n\n\t.....Press ESC to exit............");
     do{
@@ -419,3 +448,31 @@ void removes(){
     }while(1);
 
 }
+
+
+
+/***** Extra features for style *****/
+
+void upperWrap(){
+    int i=110;
+    printf("\n");
+    while(i){
+        printf("%c",220);
+        i--;
+    }
+    printf("\n");
+
+
+}
+
+void downWrap(){
+    int i=110;
+    printf("\n\n\n");
+    while(i){
+        printf("%c",223);
+        i--;
+    }
+    printf("\n");
+}
+
+
