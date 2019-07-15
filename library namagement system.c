@@ -41,10 +41,31 @@ void list();
 void search();
 void modify();
 void removes();
+void loader();
+void fastLoader();
+void backToMenu();
+void upperWrap();
+void downWrap();
 
 int main(){
-    printf("*********Welcome to Library Management system**********\n\n\n\t Name:Mahbub Alam \t Stamford University Bangladesh ");
-    Sleep(500);
+
+
+   printf("\t************************************************************************ \n");
+   printf("\t*  Project: $(proejct 01)\n");
+   printf("\t*  Project Name: $(Library Management System)\n");
+   printf("\t*  Function:Welcome,menu,add,list,search,modify,Removes;\n");
+   printf("\t*  c features:string,loop,file,structure,user define function\n");
+   printf("\t*************************************************************************\n");
+   printf("\t*  $Author: Mahbub Alam And Rakiba Akter $\n");
+   printf("\t*  $Name  : $ Library Management System\n");
+   printf("\t*  CSE 69-B 2019\n");
+   printf("\t*************************************************************************\n");
+   printf("\t*\n");
+   printf("\t*  Copyright 2019 by Anonymous Coder\n");
+   printf("\t*\n");
+   printf("\t***********************************************************************\n");
+
+    loader();
     system("color e");
    // pass();
     menu();
@@ -223,6 +244,9 @@ void list(){
     fpr=fopen("data.dat","rb");
     system("cls");
     welcome();
+    fastLoader();
+    system("cls");
+    welcome();
     upperWrap();
     printf("Serial\tName\t\t\tWriter\t\t\tDepartment\tSelf number\tTotal Number of books");
 
@@ -245,13 +269,7 @@ void list(){
     fclose(fpr);
     downWrap();
 
-    char choice;
-    printf("\n\n\n\t.....Press ESC to exit............");
-    do{
-        choice=getch();
-        if(choice == 27)
-            menu();
-    }while(1);
+    backToMenu();
 
 }
 
@@ -298,13 +316,8 @@ void search(){
         printf("\n\n\tBook not found.... \a\a");
     downWrap();
     fclose(fpr);
-    char choice;
-    printf("\n\n\n\t.....Press ESC to exit............");
-    do{
-        choice=getch();
-        if(choice == 27)
-            menu();
-    }while(1);
+
+   backToMenu();
 }
 
 
@@ -345,7 +358,7 @@ void modify(){
             serial++;
 
 
-
+            downWrap();
 
 
             fflush(stdin);
@@ -367,7 +380,7 @@ void modify(){
 
             }
     }
-     downWrap();
+
      fclose(fp);
     if(!found)
         printf("\n\nFile not found\a");
@@ -377,22 +390,19 @@ void modify(){
 
 
 
-    printf("\n\n\n\t.....Press ESC to exit............");
-    char choice;
-    do{
-        choice=getch();
-        if(choice ==27)
-            menu();
-    }while(1);
+    backToMenu();
 }
 
 void removes(){
     system("cls");
     welcome();
-    FILE *fpr,*temp;
-    int flag=0;
+    FILE *fpr,*temp,*fp;
+    int flag=0,serial=1,i=8,n=0;
     char name[40];
+    struct books s;
     fpr=fopen("data.dat","rb");
+    fp=fopen("data.dat","rb");
+
     if(!fpr){
         printf("\n\n\n\t  System Error !! \a\a\a");
     }
@@ -404,17 +414,65 @@ void removes(){
             getch();
             menu();
         }
+
+        if(!fp){
+        printf("\n\n\n\t  System Error !! \a\a\a");
+    }
+
+
         printf("\n\tEnter Book Name:");
         fflush(stdin);
         gets(name);
+
         strupr(name);
 
-        while(fread(&b,sizeof(b),1,fpr)){
+
+        /**for showing file**/
+     //upperWrap();
+     /**if we use this upperWrap function ,program not worked properly ,that's why we are using print function****/
+
+    printf("\n-----------------------------------------------------------------------------------------------------------\nSerial\tName\t\t\tWriter\t\t\tDepartment\tSelf number\tTotal Number of books");
+
+    while(fread(&s,sizeof(s),1,fpr)){
+
+        if(!strcmp(s.name,name)){
+
+            gotoxy(2,i);
+            printf("%d",serial);
+            gotoxy(8,i);
+            printf("%s",s.name);
+            gotoxy(32,i);
+            printf("%s",s.writer);
+            gotoxy(56,i);
+            printf("%s",s.department);
+            gotoxy(77,i);
+            printf("%s",s.self);
+            gotoxy(92,i);
+            printf("%s",s.number);
+            i+=2;
+            serial++;
+        }
+
+    }
+    downWrap();
+
+
+
+
+
+
+
+
+
+        while(fread(&b,sizeof(b),1,fp)){
             if(strcmp(name,b.name)){
                 fwrite(&b,sizeof(b),1,temp);
             }
             if(!strcmp(name,b.name))
-                flag=1;
+            {
+               flag=1;
+            }
+
 
         }
 
@@ -429,24 +487,32 @@ void removes(){
 		else
 		{
 		    fclose(fpr);
+		    fclose(fp);
             fclose(temp);
 			remove("data.dat");
 			rename("temp","data.dat");
-			printf("RECORD DELETED SUCCESSFULLY.");
+			printf("\n\n\n RECORD DELETED SUCCESSFULLY.");
 
 		}
 
     }
 
 
-    char choice;
+   backToMenu();
+
+}
+
+
+
+
+void backToMenu(){
+     char choice;
     printf("\n\n\n\t.....Press ESC to exit............");
     do{
         choice=getch();
         if(choice == 27)
             menu();
     }while(1);
-
 }
 
 
@@ -473,6 +539,33 @@ void downWrap(){
         i--;
     }
     printf("\n");
+}
+
+
+void loader()
+{
+    int i;
+    //system("cls");
+    printf("\n\n\n\t please wait While Reading Data....\n\n\t");
+    for(i=1;i<80; i++)
+    {
+        Sleep(45);
+        printf("%c",219);
+
+    }
+}
+
+void fastLoader()
+{
+    int i;
+    //system("cls");
+    printf("\n\n\n\t please wait While Reading Data....\n\n\t");
+    for(i=1;i<80; i++)
+    {
+        Sleep(10);
+        printf("%c",219);
+
+    }
 }
 
 
