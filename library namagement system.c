@@ -28,12 +28,13 @@ struct books{
     char Name[50];
     char writer[50];
     char department[30];
-    //char pas[30];
     char self[5];
 
 }b;
+
+//user define function's prototypes
+
 void gotoxy(int x,int y);
-//void pass();
 void welcome();
 void menu();
 void add();
@@ -46,6 +47,7 @@ void fastLoader();
 void backToMenu();
 void upperWrap();
 void downWrap();
+
 
 int main(){
 
@@ -67,11 +69,12 @@ int main(){
 
     loader();
     system("color e");
-   // pass();
     menu();
 
     return 0;
 }
+
+
 COORD coord = {0,0};
 void gotoxy(int x,int y)
 {
@@ -98,46 +101,6 @@ void welcome(){
     }
 
 }
-
-//Without password
-/*
-void pass(){
-    system("cls");
-    welcome();
-    FILE *fp,*fpr;
-    int i=0;
-    fpr=fopen("data.dat","rb");
-    if(!fpr){
-        fp=fopen("data.dat","wb+");
-        if(!fp){
-            printf("\n\n\n\t\t System error! \a\a\a");
-        }
-
-        printf("\n\t Enter New Password:");
-        gets(b.pas);
-        fwrite(&b,sizeof(b),1,fp);
-        fclose(fp);
-        menu();
-    }
-    else{
-        char pas[30];
-        gotoxy(60,7);
-        printf("\n\t Enter Password:");
-        fflush(stdin);
-        gets(pas);
-        while(fread(&b,sizeof(b),1,fpr)){
-            if(!strcmp(pas,b.pas)){
-                fclose(fpr);
-                menu();
-                i=1;
-            }
-        }
-        if(!i)
-            printf("\n\n\t Wrong password.. \a\a\a");
-    }
-    fclose(fpr);
-}
-*/
 
 
 void menu(){
@@ -197,7 +160,7 @@ void menu(){
 void add(){
     system("cls");
     welcome();
-    FILE *fp,*fpr;
+    FILE *fp;
     fp=fopen("data.dat","ab+");
 
     if(!fp){
@@ -207,7 +170,6 @@ void add(){
             menu();
         }
     }
-    fpr=fopen("data.dat","rb");
 
     char another='y';
 
@@ -388,121 +350,91 @@ void modify(){
         printf("\n\nSuccessfully Modified ......");
 
 
-
-
     backToMenu();
 }
 
+
 void removes(){
+    FILE *fpr,*temp;
+    fpr=fopen("data.dat","rb");
+    temp=fopen("temp","wb+");
     system("cls");
     welcome();
-    FILE *fpr,*temp,*fp;
-    int flag=0,serial=1,i=8,n=0;
+    printf("\n\n\tEnter name to delete:");
     char name[40];
-    struct books s;
-    fpr=fopen("data.dat","rb");
-    fp=fopen("data.dat","rb");
+    fflush(stdin);
+    gets(name);
+    strupr(name);
+    int flag=0,serial=1,i=8,n=0;
+    upperWrap();
+    printf("Serial\tName\t\t\tWriter\t\t\tDepartment\tSelf number\tTotal Number of books");
+    while(fread(&b,sizeof(b),1,fpr)){
 
-    if(!fpr){
-        printf("\n\n\n\t  System Error !! \a\a\a");
-    }
-    else{
+        if(strcmp(name,b.name))
+        {
 
-        temp=fopen("temp","wb+");
-        if(!temp){
-            printf("\n\n\n system error press any key");
-            getch();
-            menu();
+            fwrite(&b,sizeof(b),1,temp);
         }
 
-        if(!fp){
-        printf("\n\n\n\t  System Error !! \a\a\a");
-    }
-
-
-        printf("\n\tEnter Book Name:");
-        fflush(stdin);
-        gets(name);
-
-        strupr(name);
-
-
-        /**for showing file**/
-     //upperWrap();
-     /**if we use this upperWrap function ,program not worked properly ,that's why we are using print function****/
-
-    printf("\n-----------------------------------------------------------------------------------------------------------\nSerial\tName\t\t\tWriter\t\t\tDepartment\tSelf number\tTotal Number of books");
-
-    while(fread(&s,sizeof(s),1,fpr)){
-
-        if(!strcmp(s.name,name)){
-
-            gotoxy(2,i);
+        else
+        {
+             gotoxy(2,i);
             printf("%d",serial);
             gotoxy(8,i);
-            printf("%s",s.name);
+            printf("%s",b.name);
             gotoxy(32,i);
-            printf("%s",s.writer);
+            printf("%s",b.writer);
             gotoxy(56,i);
-            printf("%s",s.department);
+            printf("%s",b.department);
             gotoxy(77,i);
-            printf("%s",s.self);
+            printf("%s",b.self);
             gotoxy(92,i);
-            printf("%s",s.number);
+            printf("%s",b.number);
             i+=2;
             serial++;
-        }
-
-    }
-    downWrap();
 
 
 
-
-
-
-
-
-
-        while(fread(&b,sizeof(b),1,fp)){
-            if(strcmp(name,b.name)){
-                fwrite(&b,sizeof(b),1,temp);
-            }
-            if(!strcmp(name,b.name))
-            {
-               flag=1;
-            }
-
+            flag=1;
 
         }
 
+    }
+     downWrap();
 
+    if(!flag){
 
-        if(!flag)
-	{
-	    fclose(temp);
-		printf("\n\n\t NO BOOK TO DELETE.");
-		remove("temp");
-	}
-		else
-		{
-		    fclose(fpr);
-		    fclose(fp);
-            fclose(temp);
-			remove("data.dat");
-			rename("temp","data.dat");
-			printf("\n\n\n RECORD DELETED SUCCESSFULLY.");
+        fclose(temp);
+        fclose(fpr);
 
-		}
+        if(remove("temp"))
+            printf("\n\n\t Temp file not removed...");
+            else
+                printf(" ");
+
+        puts("\n\n\nFile not found..\n\n\n\tpress 1.For retry.\n\n\tpress ESC to Exit");
+        char choice;
+        while(1){
+            choice = getch();
+            if(choice == 27)
+                menu();
+            else if(choice == '1')
+                removes();
+
+        }
 
     }
+    else{
+        printf("\n\n\n\tfile Sucessfully delete....");
+        fclose(fpr);
+        fclose(temp);
+        remove("data.dat");
+        if(rename("temp","data.dat"))
+            printf("\n\n\tRename function doesn't worked properly..");
 
-
-   backToMenu();
-
+        backToMenu();
+    }
 }
-
-
 
 
 void backToMenu(){
@@ -545,7 +477,6 @@ void downWrap(){
 void loader()
 {
     int i;
-    //system("cls");
     printf("\n\n\n\t please wait While Reading Data....\n\n\t");
     for(i=1;i<80; i++)
     {
@@ -558,7 +489,6 @@ void loader()
 void fastLoader()
 {
     int i;
-    //system("cls");
     printf("\n\n\n\t please wait While Reading Data....\n\n\t");
     for(i=1;i<80; i++)
     {
@@ -567,5 +497,3 @@ void fastLoader()
 
     }
 }
-
-
