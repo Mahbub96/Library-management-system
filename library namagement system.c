@@ -21,6 +21,10 @@
 #include<stdlib.h>
 #include<windows.h>
 
+#define UP 72
+#define DOWN 80
+
+
 struct books{
 
     char number[3];
@@ -117,7 +121,7 @@ void menu()
 
     system("cls");
     welcome();
-    printf("\n\n\tPress \'w\' or \'s\' to move up and down");
+    printf("\n\n\tPress \'W\' or \'S\' to move up and down");
     switch(count){
 
 
@@ -157,7 +161,7 @@ void menu()
             search();
         break;
 
-        case 4:
+    case 4:
         printf("\n\n\tAdd books\n");
         printf("\tView book list\n");
         printf("\tSearch book\n");
@@ -169,7 +173,7 @@ void menu()
             modify();
         break;
 
-        case 5:
+    case 5:
         printf("\n\n\tAdd books\n");
         printf("\tView book list\n");
         printf("\tSearch book\n");
@@ -181,7 +185,7 @@ void menu()
             removes();
         break;
 
-        case 6:
+    case 6:
         printf("\n\n\tAdd books\n");
         printf("\tView book list\n");
         printf("\tSearch book\n");
@@ -197,9 +201,9 @@ void menu()
 
 
     ///check command
-    if(ch==119 || ch == 87)
+    if(ch==119 || ch == 87 || ch == UP)
         count--;
-    else if(ch==115 || ch == 83)
+    else if(ch==115 || ch == 83 || ch == DOWN )
         count++;
 
         if(count>6)
